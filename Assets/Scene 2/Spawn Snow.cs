@@ -8,12 +8,15 @@ public class SpawnSnow : MonoBehaviour
 
     void Start()
     {
-        for (var i = 0; i < 10; i++)
+        for (int i = 0; i < 100; i++)
         {
-            GameObject snow = Instantiate(prefab);
-            snow.transform.parent = transform;
-            snow.transform.localPosition = new Vector3(i * 0.1f, 0, 0);
-            snow.transform.rotation = Quaternion.identity;
+            for (int j = 0; j < 100; j++)
+            {
+                GameObject snow = Instantiate(prefab);
+                snow.transform.parent = transform;
+                snow.transform.localPosition = new Vector3(i * 0.1f, 0, j * 0.1f);
+                snow.transform.rotation = Quaternion.identity;
+            }
         }
     }
 
