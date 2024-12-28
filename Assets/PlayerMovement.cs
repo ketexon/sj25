@@ -1,28 +1,19 @@
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float speed = 2;
-    [SerializeField] Rigidbody rb;
+    [SerializeField] NavMeshAgent agent;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        Debug.Log("Hello World!");
-    }
+    Vector2 value = Vector2.zero;
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(Input.GetKey(KeyCode.W))
-        {
-            transform.position += new Vector3(0, 0, 1) * Time.deltaTime;
-        }
+    void Update(){
+        agent.velocity = new Vector3(value.x, 0, value.y)
+            * agent.speed;
     }
 
     void OnMove(InputValue inputValue){
-        var value = inputValue.Get<Vector2>();
-        rb.linearVelocity = new Vector3(value.x, value.y, 0) * speed;
+        value = inputValue.Get<Vector2>();
     }
 }
