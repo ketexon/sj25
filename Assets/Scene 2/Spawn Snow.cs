@@ -8,9 +8,9 @@ public class SpawnSnow : MonoBehaviour
 
     void Start()
     {
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 150; i++)
         {
-            for (int j = 0; j < 100; j++)
+            for (int j = 0; j < 150; j++)
             {
                 GameObject snow = Instantiate(prefab);
                 snow.transform.parent = transform;
