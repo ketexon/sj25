@@ -11,6 +11,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scene 2/Snow Collecting Scene.unity
     guid: 1e314d1820c49c14a8ef6cee9ac4a4ef
+  - enabled: 1
+    path: Assets/House/House.unity
+    guid: da9c5995ff90aeb4fb767c8b8582afb1
+  - enabled: 1
+    path: Assets/NGO_Minimal_Setup/NGO_Setup.unity
+    guid: d4879a8b6338bd54d9e73f44a79b0f8c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
