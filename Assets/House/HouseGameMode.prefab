@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7942477007868255267}
   - component: {fileID: 7119385542687587876}
   m_Layer: 0
-  m_Name: HouseGenerator
+  m_Name: HouseGameMode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -85,15 +85,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  duration: 10
   playerPrefab: {fileID: 9144192022478459435, guid: fb733f32d9a586c4297150822b7d8374, type: 3}
+  nextScene: SnowballRolling
   roomPrefabs:
   - {fileID: 2172275531680745963, guid: 0283c3a7a26288c4aa62c4b37bcd34dd, type: 3}
   - {fileID: 2172275531680745963, guid: 5d01a24a5702dc14dbba78c7db15770f, type: 3}
   grid: {fileID: 1261075612356230494}
   surface: {fileID: 8707699012253509831}
   length: 4
-  scrapPool: {fileID: 11400000, guid: e0d68ad0e11f69a4f8d469ea8075ffe2, type: 2}
-  timerText: {fileID: 0}
+  scrapPickupPrefab: {fileID: 7377777094800670443, guid: 51d2cb4d5e342284fb8a23653246db36, type: 3}
+  scrapPool: {fileID: 11400000, guid: 63b2571a4e413c84180b74dbe65c8563, type: 2}
 --- !u!1 &8550747909715841497
 GameObject:
   m_ObjectHideFlags: 0

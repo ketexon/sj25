@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scene 2/Snow Collecting Scene.unity
+    path: Assets/SnowScene/Snow Collecting Scene.unity
     guid: 1e314d1820c49c14a8ef6cee9ac4a4ef
   - enabled: 1
     path: Assets/House/House.unity
@@ -23,9 +23,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Menu/Lobby.unity
     guid: 1e451b24dd5f77e4fbd76779cefb47ae
-  - enabled: 1
+  - enabled: 0
     path: Assets/Game.unity
     guid: 39c87b8d7f7bb95429edb78eca39d7fa
+  - enabled: 1
+    path: Assets/SnowballRolling/SnowballRolling.unity
+    guid: 13d1e48e2ca732347b61e07e8282cb8b
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

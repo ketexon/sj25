@@ -74,6 +74,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   allScrap: {fileID: 11400000, guid: 63b2571a4e413c84180b74dbe65c8563, type: 2}
   timerText: {fileID: 4297950077907567470}
+  centerText: {fileID: 2048381043263506454}
+  centerAnimator: {fileID: 1405336089343703305}
   GameReady:
     m_PersistentCalls:
       m_Calls: []

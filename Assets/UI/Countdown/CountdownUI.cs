@@ -25,4 +25,8 @@ public class CountdownUI : MonoBehaviour
         }
         animator.SetTrigger("countdown");
     }
+
+    public void OnTimeUpEnd(){
+        GameManager.Instance.OnTimesUpFinished();
+    }
 }

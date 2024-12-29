@@ -13,7 +13,9 @@ public class PlayerMovement : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        Debug.Log($"Player spawned with id {OwnerClientId}");
         if(!IsOwner) {
+            Debug.Log($"Disabling player input for {OwnerClientId}");
             GetComponent<PlayerInput>().enabled = false;
         }
         agent.Warp(transform.position);
@@ -28,7 +30,10 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     void OnGameStart(){
-        if(IsOwner) enabled = true;
+        if(IsOwner) {
+            Debug.Log("Reenabling input.");
+            enabled = true;
+        }
     }
 
     void OnGameEnd(){

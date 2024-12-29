@@ -3,9 +3,20 @@ using UnityEngine;
 
 public class ScrapPickup : NetworkBehaviour
 {
-	[SerializeField] public Scrap Scrap;
+	[SerializeField] ScrapPool scrapPool;
 
-	[ServerRpc(RequireOwnership = false)]
+	public Scrap Scrap => scrapPool.Items[ScrapIndex.Value];
+
+	public NetworkVariable<int> ScrapIndex;
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+		Instantiate(Scrap.Prefab, transform);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
 	public void PickupServerRpc(){
 		NetworkObject.Despawn(true);
 	}

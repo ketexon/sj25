@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Kutie.Extensions;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -23,23 +24,50 @@ public class GameManager : NetworkBehaviour {
 	public NetworkList<int> Player2Scrap = new();
 	public NetworkList<int> Player3Scrap = new();
 	public NetworkList<int> Player4Scrap = new();
+	NetworkVariable<int> nPlayersReady = new(
+		writePerm: NetworkVariableWritePermission.Server
+	);
 
-	public UnityEvent GameReady = new();
+	public UnityEvent GameReadyEvent = new();
 	public UnityEvent<int> CountdownEvent = new();
 	public UnityEvent GameStartEvent = new();
 	public UnityEvent GameEndEvent = new();
+	public UnityEvent NextGameEvent = new();
+
+	[System.NonSerialized] public bool GameReady = false;
+
+	int gameDuration = 0;
 
 	public NetworkVariable<int> TimeRemaining = new(
         writePerm: NetworkVariableWritePermission.Server
     );
 
-	public NetworkList<int> PlayerScrap => NetworkManager.Singleton.LocalClientId switch {
+	public NetworkList<int> PlayerScrapIndices => NetworkManager.Singleton.LocalClientId switch {
 		0 => Player1Scrap,
 		1 => Player2Scrap,
 		2 => Player3Scrap,
 		3 => Player4Scrap,
 		_ => null
 	};
+
+	Coroutine countDownCoro = null;
+
+	public List<Scrap> GetPlayerScrap(int playerIndex){
+		var networkList = playerIndex switch {
+			0 => Player1Scrap,
+			1 => Player2Scrap,
+			2 => Player3Scrap,
+			3 => Player4Scrap,
+			_ => null
+		};
+		if(networkList == null) return null;
+
+		var scrapList = new List<Scrap>();
+		foreach(var scrapIndex in networkList){
+			scrapList.Add(indexScrapMap[scrapIndex]);
+		}
+		return scrapList;
+	}
 
 	void Awake() {
 		if(Instance){
@@ -83,44 +111,65 @@ public class GameManager : NetworkBehaviour {
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-
-		Debug.Log($"Waiting for {LobbyManager.Instance.NPlayers} players to connect...");
-		// wait for all players in lobby to connect, then start the game
-		if(NetworkManager.Singleton.ConnectedClientsList.Count == LobbyManager.Instance.NPlayers){
-			GameReady.Invoke();
-		}
-		else {
-			NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-		}
+		NewGame();
     }
 
-	void OnClientConnected(ulong _){
+	public void NewGame(){
+		Debug.Log($"Waiting for {LobbyManager.Instance.NPlayers} players to connect...");
+		if(IsServer){
+			nPlayersReady.Value = 0;
+		}
+		nPlayersReady.OnValueChanged += OnNPlayersReadyChanged;
+	}
+
+	public void OnPlayerReady(){
+		nPlayersReady.Value++;
+	}
+
+	void OnNPlayersReadyChanged(int _, int newValue){
 		Debug.Log($"New player connected");
-		if(NetworkManager.Singleton.ConnectedClientsList.Count == LobbyManager.Instance.NPlayers){
-			NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
-			GameReady.Invoke();
+		if(newValue == LobbyManager.Instance.NPlayers){
+			nPlayersReady.OnValueChanged -= OnNPlayersReadyChanged;
+			GameReady = true;
+			GameReadyEvent.Invoke();
 		}
 	}
 
 	public void StartTimer(int nSeconds){
+		TimeRemaining.OnValueChanged += OnTimeRemainingChanged;
+		timerText.text = nSeconds.ToString();
 		if(!IsServer) return;
 		TimeRemaining.Value = nSeconds;
 		IEnumerator Coro(){
 			while(TimeRemaining.Value > 0){
-				timerText.text = TimeRemaining.Value.ToString();
 				yield return new WaitForSeconds(1);
 				TimeRemaining.Value--;
 			}
-			timerText.text = "";
-			centerText.text = "TIME'S UP!";
-			centerAnimator.SetTrigger("show");
 			EndGame();
 		}
 		StartCoroutine(Coro());
 	}
 
+	void OnTimeRemainingChanged(int _, int time){
+		if(TimeRemaining.Value <= 0){
+			TimeRemaining.OnValueChanged -= OnTimeRemainingChanged;
+			timerText.text = "";
+			centerText.text = "TIME'S UP!";
+			centerAnimator.SetTrigger("show");
+			EndGame();
+		}
+		else {
+			timerText.text = TimeRemaining.Value.ToString();
+		}
+	}
+
+	public void OnTimesUpFinished(){
+		NextGameEvent.Invoke();
+	}
+
 	public void StartGame(int duration){
-		if(!IsServer) return;
+		gameDuration = duration;
+
 		IEnumerator Coro(){
 			int i = 3;
 			while(i > 0){
@@ -134,15 +183,26 @@ public class GameManager : NetworkBehaviour {
 				i--;
 			}
 
-			CountdownEvent.Invoke(0);
-			centerText.text = "GO!";
-			centerAnimator.SetTrigger("countdown");
-
-			GameStartEvent.Invoke();
-			Debug.Log("GAME START");
-			StartTimer(duration);
+			if(IsServer){
+				EndCountdownClientRpc();
+			}
 		}
-		StartCoroutine(Coro());
+		countDownCoro = StartCoroutine(Coro());
+	}
+
+	[Rpc(SendTo.ClientsAndHost, RequireOwnership = false)]
+	void EndCountdownClientRpc(){
+		if(countDownCoro != null){
+			StopCoroutine(countDownCoro);
+			countDownCoro = null;
+		}
+
+		CountdownEvent.Invoke(0);
+		centerText.text = "GO!";
+		centerAnimator.SetTrigger("countdown");
+		GameStartEvent.Invoke();
+		Debug.Log("GAME START");
+		StartTimer(gameDuration);
 	}
 
 	public void EndGame(){

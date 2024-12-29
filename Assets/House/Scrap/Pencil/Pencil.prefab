@@ -60,10 +60,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pencil
       objectReference: {fileID: 0}
-    - target: {fileID: 4606946522627626479, guid: 01f1b588a33dcb34c9d41abdca2129b7, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 8647026299845784189, guid: 01f1b588a33dcb34c9d41abdca2129b7, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3784188966

@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 342e6b955104f7d4fa9fa59ebaa293b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startScene: House
   ProtocolType: 0
   PlayerJoinedEvent:
     m_PersistentCalls:

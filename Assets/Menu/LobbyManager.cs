@@ -28,6 +28,7 @@ public class LobbyManager : SingletonMonoBehaviour<LobbyManager>
 	const string RELAY_JOIN_CODE_KEY = "relayJoinCode";
 	const string CONNECTION_TYPE = "dtls";
 
+	[SerializeField] string startScene = "House";
 	[SerializeField] public ProtocolType ProtocolType = ProtocolType.Relay;
 	[System.NonSerialized] public Lobby Lobby;
 	[System.NonSerialized] public ILobbyEvents LobbyEvents;
@@ -247,7 +248,7 @@ public class LobbyManager : SingletonMonoBehaviour<LobbyManager>
 	public async void StartGame(){
 		Debug.Log("Starting game...");
 		await SetLobbyClientId();
-		SceneManager.LoadScene("House");
+		SceneManager.LoadScene(startScene);
 	}
 
 	public async Task<bool> StartHost(){
