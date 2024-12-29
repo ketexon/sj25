@@ -73,9 +73,6 @@ public class Room : MonoBehaviour
             positiveZShown,
             negativeZShown
         };
-        if(transform.position == Vector3.zero){
-            Debug.Log($"SHOWN: 0: {shown[0]} {doorAlphas[0].CurrentValue} 1: {shown[1]} {doorAlphas[1].CurrentValue} 2: {shown[2]} {doorAlphas[2].CurrentValue} 3: {shown[3]} {doorAlphas[3].CurrentValue}");
-        }
 
         for(int i = 0; i < 4; ++i){
             Color col = defaultWallColor.WithA(

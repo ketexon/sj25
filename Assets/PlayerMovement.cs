@@ -16,6 +16,7 @@ public class PlayerMovement : NetworkBehaviour
         if(!IsOwner) {
             GetComponent<PlayerInput>().enabled = false;
         }
+        agent.Warp(transform.position);
     }
 
     void Start(){

@@ -5,11 +5,14 @@ using UnityEngine;
 
 public class HouseGenerator : NetworkBehaviour
 {
+    [SerializeField] GameObject playerPrefab;
     [SerializeField] List<GameObject> roomPrefabs;
     [SerializeField] Grid grid;
     [SerializeField] NavMeshSurface surface;
     [SerializeField] int length = 10;
     [SerializeField] ScrapPool scrapPool;
+
+    [System.NonSerialized] public Vector3 SpawnPoint;
 
     List<Room> rooms = new();
 
@@ -28,6 +31,7 @@ public class HouseGenerator : NetworkBehaviour
         if(IsServer){
             SpawnScrap();
         }
+        SpawnPlayer();
     }
 
     void SpawnRooms(){
@@ -67,5 +71,35 @@ public class HouseGenerator : NetworkBehaviour
                 );
             }
         }
+    }
+
+    void SpawnPlayer(){
+        SpawnPlayerServerRPC();
+    }
+
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    void SpawnPlayerServerRPC(RpcParams rpcParams = default){
+        var playerId = rpcParams.Receive.SenderClientId;
+        Debug.Log($"Spawning player for {playerId}");
+        List<Vector3> spawnPoints = new(){
+            grid.CellToWorld(new Vector3Int(0, 0, 0)),
+            grid.CellToWorld(new Vector3Int(length - 1, 0, length - 1)),
+            grid.CellToWorld(new Vector3Int(length - 1, 0, 0)),
+            grid.CellToWorld(new Vector3Int(0, 0, length - 1)),
+        };
+        Vector3 center = (spawnPoints[0] + spawnPoints[1]) / 2;
+        var spawnPoint = spawnPoints[(int)playerId % spawnPoints.Count];
+        Debug.Log($"Player {playerId} will spawn at {spawnPoint}");
+        Quaternion spawnRot = Quaternion.LookRotation(
+            center - spawnPoint,
+            Vector3.up
+        );
+        var playerNOPrefab = playerPrefab.GetComponent<NetworkObject>();
+        var playerNO = NetworkManager.SpawnManager.InstantiateAndSpawn(
+            playerNOPrefab,
+            playerId,
+            position: spawnPoint,
+            rotation: spawnRot
+        );
     }
 }
