@@ -119,6 +119,7 @@ GameObject:
   - component: {fileID: 6997775137719463326}
   - component: {fileID: -2997781478516753557}
   - component: {fileID: 1327481868144616854}
+  - component: {fileID: -5620724901949950076}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: Untagged
@@ -305,6 +306,19 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   vision: {fileID: 8230603479577452980}
   pickupAngle: 45
+--- !u!114 &-5620724901949950076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9144192022478459435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8c8156e111d326428d99fd4c1b72207, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1001 &9110027576079082270
 PrefabInstance:
   m_ObjectHideFlags: 0

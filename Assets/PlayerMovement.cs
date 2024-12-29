@@ -17,6 +17,9 @@ public class PlayerMovement : NetworkBehaviour
             GetComponent<PlayerInput>().enabled = false;
         }
         agent.Warp(transform.position);
+        enabled = false;
+        GameManager.Instance.GameStartEvent.AddListener(OnGameStart);
+        GameManager.Instance.GameEndEvent.AddListener(OnGameEnd);
     }
 
     void Start(){
@@ -24,9 +27,21 @@ public class PlayerMovement : NetworkBehaviour
             .ActiveVirtualCamera as CinemachineCamera;
     }
 
+    void OnGameStart(){
+        if(IsOwner) enabled = true;
+    }
+
+    void OnGameEnd(){
+        if(IsOwner) enabled = false;
+    }
+
     void Update(){
         if (!IsOwner || !IsSpawned) return;
-        camera.Target.TrackingTarget = transform;
+        if(camera == null) {
+            camera = CinemachineBrain.GetActiveBrain(0)
+                .ActiveVirtualCamera as CinemachineCamera;
+                return;
+        }
 
         var forward = camera.transform.forward;
         forward.y = 0;
@@ -37,7 +52,7 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     void OnMove(InputValue inputValue){
-        if(!IsOwner || !IsSpawned) return;
+        if(!IsOwner || !IsSpawned || !enabled) return;
         var value = inputValue.Get<Vector2>();
         moveDir = new Vector3(value.x, 0, value.y);
     }

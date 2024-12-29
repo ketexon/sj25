@@ -13,8 +13,8 @@ public class LobbyUI : MonoBehaviour
 
     void Start()
     {
-        inviteCodeText.text = GameManager.Instance.Lobby.LobbyCode;
-        if(GameManager.Instance.IsLobbyHost){
+        inviteCodeText.text = LobbyManager.Instance.Lobby.LobbyCode;
+        if(LobbyManager.Instance.IsLobbyHost){
             startGameButton.onClick.AddListener(StartGame);
         }
         else {
@@ -23,13 +23,13 @@ public class LobbyUI : MonoBehaviour
 
         UpdatePlayerList();
 
-        GameManager.Instance.PlayerJoinedEvent.AddListener(UpdatePlayerList);
-        GameManager.Instance.PlayerLeftEvent.AddListener(UpdatePlayerList);
-        GameManager.Instance.PlayerDataChangedEvent.AddListener(UpdatePlayerList);
+        LobbyManager.Instance.PlayerJoinedEvent.AddListener(UpdatePlayerList);
+        LobbyManager.Instance.PlayerLeftEvent.AddListener(UpdatePlayerList);
+        LobbyManager.Instance.PlayerDataChangedEvent.AddListener(UpdatePlayerList);
     }
 
     void UpdatePlayerList(){
-        var usernames = GameManager.Instance.GetPlayerUsernames();
+        var usernames = LobbyManager.Instance.GetPlayerUsernames();
         for(int i = 0; i < playerCanvasGroups.Count; i++){
             if(i < usernames.Count){
                 playerCanvasGroups[i].alpha = 1;
@@ -44,7 +44,7 @@ public class LobbyUI : MonoBehaviour
 
     async void StartGame()
     {
-        await GameManager.Instance.StartHost();
-        GameManager.Instance.StartGame();
+        await LobbyManager.Instance.StartHost();
+        LobbyManager.Instance.StartGame();
     }
 }

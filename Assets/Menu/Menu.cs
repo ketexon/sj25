@@ -30,12 +30,12 @@ public class Menu : MonoBehaviour
         SetUsername();
 
         Debug.Log("Trying to host game...");
-        if(!GameManager.Instance.IsSignedIn){
+        if(!LobbyManager.Instance.IsSignedIn){
             Debug.Log("Not signed in, cannot host game");
             return;
         }
 
-        var success = await GameManager.Instance.TryCreateLobbyAsync();
+        var success = await LobbyManager.Instance.TryCreateLobbyAsync();
         if(success){
             SceneManager.LoadScene("Lobby");
         }
@@ -49,13 +49,13 @@ public class Menu : MonoBehaviour
         SetUsername();
         Debug.Log("Trying to join lobby...");
         var code = inviteCodeField.text;
-        var success = await GameManager.Instance.TryJoinLobbyAsync(code);
+        var success = await LobbyManager.Instance.TryJoinLobbyAsync(code);
         if(success){
             SceneManager.LoadScene("Lobby");
         }
     }
 
     void SetUsername(){
-        GameManager.Instance.Username = usernameField.text;
+        LobbyManager.Instance.Username = usernameField.text;
     }
 }
