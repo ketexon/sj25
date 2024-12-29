@@ -1,0 +1,3 @@
+[submodule "Packages/com.ketexon.kutie"]
+	path = Packages/com.ketexon.kutie
+	url = https://github.com/ketexon/kutie
