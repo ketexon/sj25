@@ -34,8 +34,10 @@ public class PlayerPickup : NetworkBehaviour {
 
 	void OnUse(InputValue inputValue){
 		if(inputValue.isPressed && pickup != null){
+			var scrap = pickup.Scrap;
 			pickup.PickupServerRpc();
 			pickup = null;
+			GameManager.Instance.CollectScrap(scrap);
 		}
 	}
 }

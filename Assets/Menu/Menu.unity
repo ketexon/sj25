@@ -2575,7 +2575,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8308087817619676819, guid: bb4cc3e454777504ab8c5c07c8ec3c7e, type: 3}
       propertyPath: m_Name
-      value: GameManager
+      value: LobbyManager
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

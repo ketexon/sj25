@@ -21,7 +21,9 @@ public enum ProtocolType {
 	Unity,
 }
 
-public class GameManager : SingletonMonoBehaviour<GameManager>
+
+
+public class LobbyManager : SingletonMonoBehaviour<LobbyManager>
 {
 	const string RELAY_JOIN_CODE_KEY = "relayJoinCode";
 	const string CONNECTION_TYPE = "dtls";
@@ -31,6 +33,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	[System.NonSerialized] public ILobbyEvents LobbyEvents;
 	[System.NonSerialized] public string RelayJoinCode;
 	[System.NonSerialized] public string Username;
+	public int NPlayers => Lobby?.Players.Count ?? 0;
 
 	public UnityEvent PlayerJoinedEvent;
 	public UnityEvent PlayerLeftEvent;

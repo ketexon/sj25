@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
 using Unity.Netcode;
@@ -11,7 +12,6 @@ public class HouseGenerator : NetworkBehaviour
     [SerializeField] NavMeshSurface surface;
     [SerializeField] int length = 10;
     [SerializeField] ScrapPool scrapPool;
-
     [System.NonSerialized] public Vector3 SpawnPoint;
 
     List<Room> rooms = new();
@@ -19,6 +19,8 @@ public class HouseGenerator : NetworkBehaviour
     NetworkVariable<int> seed = new(
         writePerm: NetworkVariableWritePermission.Server
     );
+
+    List<NetworkObject> spawnedPlayers = new();
 
     public override void OnNetworkSpawn()
     {
@@ -32,9 +34,16 @@ public class HouseGenerator : NetworkBehaviour
             SpawnScrap();
         }
         SpawnPlayer();
+
+        GameManager.Instance.GameReady.AddListener(OnGameReady);
+    }
+
+    void OnGameReady(){
+        GameManager.Instance.StartGame(10);
     }
 
     void SpawnRooms(){
+        Debug.Log("SPAWNING ROOMS");
         for(var x = 0; x < length; x++){
             for(var z = 0; z < length; z++){
                 var roomPrefab = roomPrefabs[Random.Range(0, roomPrefabs.Count)];
