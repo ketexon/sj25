@@ -45,6 +45,7 @@ public class ScoreUI : SingletonMonoBehaviour<ScoreUI>
         GameManager.Instance.Player3Scrap.OnListChanged += OnScrapChanged;
         GameManager.Instance.Player4Scrap.OnListChanged += OnScrapChanged;
         GameManager.Instance.PlayerRadii.OnListChanged += OnRadiusChanged;
+        GameManager.Instance.PlayerDead.OnListChanged += OnDeadChanged;
 
         UpdateUI();
     }
@@ -71,6 +72,10 @@ public class ScoreUI : SingletonMonoBehaviour<ScoreUI>
         }
     }
 
+    void OnDeadChanged(NetworkListEvent<bool> _){
+        UpdateUI();
+    }
+
     void UpdateUI(){
         for(int i = 0; i < LobbyManager.Instance.NPlayers; i++){
             if(ScoreMode == ScoreMode.Scrap){
@@ -78,6 +83,10 @@ public class ScoreUI : SingletonMonoBehaviour<ScoreUI>
             } else if(ScoreMode == ScoreMode.Radius){
                 scoreTexts[i].text = GameManager.Instance.PlayerRadii[i].ToString("F2");
             }
+
+            canvasGroups[i].alpha = GameManager.Instance.PlayerDead[i]
+                ? 0.5f
+                : 1;
         }
     }
 }

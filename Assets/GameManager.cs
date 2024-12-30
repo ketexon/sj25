@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Kutie.Extensions;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -15,6 +17,10 @@ public class GameManager : NetworkBehaviour {
 	[SerializeField] TMPro.TMP_Text timerText;
 	[SerializeField] TMPro.TMP_Text centerText;
     [SerializeField] Animator centerAnimator;
+
+	public NetworkList<FixedString32Bytes> PlayerNames = new(new FixedString32Bytes[4] {
+		"", "", "", ""
+	});
 
 	Dictionary<int, Scrap> indexScrapMap = new();
 	Dictionary<Scrap, int> scrapIndexMap = new();
@@ -51,8 +57,13 @@ public class GameManager : NetworkBehaviour {
     );
 
 	public NetworkList<int> PlayerScrapIndices => GetPlayerScrapIndices((int)NetworkManager.Singleton.LocalClientId);
+	public NetworkList<bool> PlayerDead = new(
+		new bool[4] { false, false, false, false },
+		writePerm: NetworkVariableWritePermission.Server
+	);
 
 	Coroutine countDownCoro = null;
+	Coroutine timerCoro = null;
 
 	public NetworkList<int> GetPlayerScrapIndices(int playerIndex){
 		return playerIndex switch {
@@ -63,6 +74,7 @@ public class GameManager : NetworkBehaviour {
 			_ => null
 		};
 	}
+
 
 	public List<Scrap> GetPlayerScrap(int playerIndex){
 		var networkList = playerIndex switch {
@@ -135,8 +147,16 @@ public class GameManager : NetworkBehaviour {
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+		var playerId = NetworkManager.Singleton.LocalClientId;
+		SetPlayerNameServerRpc(LobbyManager.Instance.Username);
 		NewGame();
     }
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	void SetPlayerNameServerRpc(FixedString32Bytes name, RpcParams rpcParams = default){
+		var playerIndex = rpcParams.Receive.SenderClientId;
+		PlayerNames[(int)playerIndex] = name;
+	}
 
 	public void NewGame(){
 		Debug.Log($"Waiting for {LobbyManager.Instance.NPlayers} players to connect...");
@@ -144,6 +164,11 @@ public class GameManager : NetworkBehaviour {
 			nPlayersReady.Value = 0;
 		}
 		nPlayersReady.OnValueChanged += OnNPlayersReadyChanged;
+	}
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	public void ReadyUpServerRpc() {
+		nPlayersReady.Value++;
 	}
 
 	public void OnPlayerReady(){
@@ -171,7 +196,7 @@ public class GameManager : NetworkBehaviour {
 			}
 			EndGame();
 		}
-		StartCoroutine(Coro());
+		timerCoro = StartCoroutine(Coro());
 	}
 
 	void OnTimeRemainingChanged(int _, int time){
@@ -231,6 +256,21 @@ public class GameManager : NetworkBehaviour {
 	}
 
 	public void EndGame(){
+		if(timerCoro != null && TimeRemaining.Value > 0){
+			StopCoroutine(timerCoro);
+			timerCoro = null;
+
+			TimeRemaining.OnValueChanged -= OnTimeRemainingChanged;
+			timerText.text = "";
+			centerText.text = "GAME!";
+			centerAnimator.SetTrigger("show");
+		}
 		GameEndEvent.Invoke();
+	}
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	public void SnowballDiedServerRpc(RpcParams rpcParams = default){
+		var playerIndex = rpcParams.Receive.SenderClientId;
+		PlayerMasses[(int)playerIndex] = 0;
 	}
 }

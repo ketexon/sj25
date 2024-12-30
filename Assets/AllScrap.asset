@@ -13,4 +13,12 @@ MonoBehaviour:
   m_Name: AllScrap
   m_EditorClassIdentifier: 
   Items:
+  - {fileID: 11400000, guid: d9f61f23588409e4498ef368f4e1eb7f, type: 2}
+  - {fileID: 11400000, guid: 3a5dd5e432d561d409ad915d8e41e98f, type: 2}
+  - {fileID: 11400000, guid: 6e38b9bd17a7e2749bf89e2912525d0d, type: 2}
+  - {fileID: 11400000, guid: 7dca1e7ff5789b64f80923930120dc5e, type: 2}
+  - {fileID: 11400000, guid: 6508bc6c3c3fe1448a7d8a2ac071d1bf, type: 2}
   - {fileID: 11400000, guid: 12d9522e56981d24a93aad5c39256bad, type: 2}
+  - {fileID: 11400000, guid: b5bfb3c217569bb4f82a04d9cecff7a4, type: 2}
+  - {fileID: 11400000, guid: ad569e6c885d0c54495404a8d3bcc733, type: 2}
+  - {fileID: 11400000, guid: 0c7e85c1c47a47d468cdcd6bbfd7fb1c, type: 2}

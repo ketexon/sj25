@@ -88,9 +88,16 @@ MonoBehaviour:
   duration: 10
   playerPrefab: {fileID: 9144192022478459435, guid: fb733f32d9a586c4297150822b7d8374, type: 3}
   nextScene: SnowballRolling
+  scoreMode: 0
   roomPrefabs:
-  - {fileID: 2172275531680745963, guid: 0283c3a7a26288c4aa62c4b37bcd34dd, type: 3}
+  - {fileID: 865426926772450052, guid: bdf532110e0c3a0449a5a5880e8dbdd9, type: 3}
+  - {fileID: 865426926772450052, guid: 3e0d0a7a692313140bebce2ef60399ad, type: 3}
   - {fileID: 2172275531680745963, guid: 5d01a24a5702dc14dbba78c7db15770f, type: 3}
+  - {fileID: 2172275531680745963, guid: 0283c3a7a26288c4aa62c4b37bcd34dd, type: 3}
+  - {fileID: 2172275531680745963, guid: e0e00c681fb2f8041931beb130e1b439, type: 3}
+  - {fileID: 2172275531680745963, guid: 5b23adb079a76634a9930eefaf3f5d5e, type: 3}
+  - {fileID: 2172275531680745963, guid: 323b6de47cfe09546a9b4448329fedc1, type: 3}
+  - {fileID: 2172275531680745963, guid: 1fecf1af5e705a44aa5fe3903748f541, type: 3}
   grid: {fileID: 1261075612356230494}
   surface: {fileID: 8707699012253509831}
   length: 4

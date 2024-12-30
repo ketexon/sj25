@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 620214855749719413}
   m_Layer: 0
   m_Name: HillSnowball
-  m_TagString: Untagged
+  m_TagString: PlayerSnowball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -164,9 +164,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  baseBreakingImpulse: 5
+  baseBreakingImpulse: 10
   fracturedSnowballPrefab: {fileID: 3018506334890500212, guid: 95645f9faf3a9bb41bf8d5364467b3ee, type: 3}
-  startImpulse: 1
+  startVelocity: 2
   center: {fileID: 8605010066576249477}
 --- !u!114 &6472435614716382357
 MonoBehaviour:

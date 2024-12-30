@@ -6,6 +6,8 @@ public class HillGameMode : GameMode
 {
     [SerializeField] Transform spawnPointContainer;
 
+    int playersFinished = 0;
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -19,7 +21,9 @@ public class HillGameMode : GameMode
         }
         else {
             ReadyUp();
+            playersFinished++;
         }
+        HillSnowball.FracturedEvent.AddListener(PlayerFinished);
     }
 
     private void OnGameStart()
@@ -31,5 +35,19 @@ public class HillGameMode : GameMode
     {
         var spawnPoint = spawnPointContainer.GetChild(i);
         return (spawnPoint.position, spawnPoint.rotation);
+    }
+
+    public void PlayerFinished(){
+        if(IsServer){
+            Debug.Log("Player finished");
+            playersFinished++;
+            TryEndEarly();
+        }
+    }
+
+    void TryEndEarly(){
+        if(playersFinished == NetworkManager.Singleton.ConnectedClients.Count){
+            GameManager.Instance.EndGame();
+        }
     }
 }

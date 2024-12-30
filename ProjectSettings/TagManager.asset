@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Object
   - Snow
+  - PlayerSnowball
   layers:
   - Default
   - TransparentFX

@@ -32,6 +32,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Hill/Hill.unity
     guid: 4f5e681937c1f9840951f3514f20275b
+  - enabled: 1
+    path: Assets/Scores/Scores.unity
+    guid: 501d11078b3fef54c9aaefb5fab21edd
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

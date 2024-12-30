@@ -1,18 +1,22 @@
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class HillSnowball : NetworkBehaviour
 {
+    public static UnityEvent FracturedEvent = new();
+
     [SerializeField] float baseBreakingImpulse = 10.0f;
     [SerializeField] GameObject fracturedSnowballPrefab;
-    [SerializeField] float startImpulse = 10.0f;
+    [SerializeField] float startVelocity = 2.0f;
     [SerializeField] Transform center;
 
     [System.NonSerialized] public float Radius = 0;
     [System.NonSerialized] public float Mass = 0;
 
     float breakingImpulse = 0.0f;
+    [System.NonSerialized] public bool Finished = false;
 
     public override void OnNetworkSpawn()
     {
@@ -21,6 +25,7 @@ public class HillSnowball : NetworkBehaviour
         CalculateParams();
 
         GameManager.Instance.GameStartEvent.AddListener(OnGameStart);
+        GameManager.Instance.GameEndEvent.AddListener(OnGameEnd);
 
         HillCameraManager.Instance.Targets.Add(center);
         if(IsOwner){
@@ -42,10 +47,7 @@ public class HillSnowball : NetworkBehaviour
         GameManager.Instance.GameStartEvent.RemoveListener(OnGameStart);
         if(IsServer){
             var rb = GetComponent<Rigidbody>();
-            rb.AddForce(
-                transform.forward * startImpulse / Mass,
-                ForceMode.Impulse
-            );
+            rb.linearVelocity = transform.forward * startVelocity;
         }
     }
 
@@ -63,14 +65,17 @@ public class HillSnowball : NetworkBehaviour
             transform.localScale = Vector3.one * Radius;
             var rb = GetComponent<Rigidbody>();
             rb.mass = Mass;
+
+            Debug.Log($"Snowball {OwnerClientId}: r: {Radius}, m: {Mass}, I: {breakingImpulse}");
         }
     }
 
     void OnCollisionEnter(Collision collision) {
-        if(IsServer){
+        if(IsServer && !Finished){
             var impulse = collision.impulse.magnitude;
             Debug.Log($"Impulse {OwnerClientId}: {impulse}");
             if(impulse > breakingImpulse){
+                GameManager.Instance.PlayerDead[(int)OwnerClientId] = true;
                 FractureClientRpc();
             }
         }
@@ -87,5 +92,11 @@ public class HillSnowball : NetworkBehaviour
             transform.rotation
         );
         fracturedGO.transform.localScale = transform.localScale;
+        FracturedEvent.Invoke();
+    }
+
+    void OnGameEnd(){
+        GameManager.Instance.GameEndEvent.RemoveListener(OnGameEnd);
+        Finished = true;
     }
 }
