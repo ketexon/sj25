@@ -4,4 +4,6 @@ using UnityEngine;
 public class Scrap : ScriptableObject {
 	[SerializeField] public string Name;
 	[SerializeField] public GameObject Prefab;
+	[SerializeField] public float Length;
+	[SerializeField] public float Mass;
 }
