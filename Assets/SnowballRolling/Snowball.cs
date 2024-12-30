@@ -25,13 +25,13 @@ public class Snowball : MonoBehaviour
 
     bool snowballShown = false;
     bool started = false;
-
     void Awake(){
         CalculateCoreStats();
     }
 
     // Spawn core
     void Start(){
+        CalculateCoreStats();
         SpawnCore();
         Debug.Log($"Snowball spawned with radius {Radius}");
 
@@ -79,6 +79,8 @@ public class Snowball : MonoBehaviour
             Mass += scrap.Mass;
         }
         Radius = maxLength + Mathf.Pow(lengthSum / 2, 1f/3);
+
+        Debug.Log($"Calculated radius: {Radius}");
     }
 
     Vector3 SampleUnitSphere(){

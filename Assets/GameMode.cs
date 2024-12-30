@@ -8,6 +8,7 @@ public abstract class GameMode : NetworkBehaviour
     [SerializeField] int duration = 10;
     [SerializeField] GameObject playerPrefab;
     [SerializeField] string nextScene = "";
+    [SerializeField] ScoreMode scoreMode;
 
     NetworkVariable<int> seed = new(
         writePerm: NetworkVariableWritePermission.Server
@@ -28,6 +29,8 @@ public abstract class GameMode : NetworkBehaviour
         else {
             GameManager.Instance.GameReadyEvent.AddListener(OnGameReady);
         }
+
+        ScoreUI.Instance.ScoreMode = scoreMode;
     }
 
     void OnGameReady(){
@@ -60,6 +63,15 @@ public abstract class GameMode : NetworkBehaviour
         spawnedPlayers.Add(playerNO);
     }
 
+    protected void ReadyUp(){
+        ReadyUpServerRPC();
+    }
+
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    void ReadyUpServerRPC(){
+        GameManager.Instance.OnPlayerReady();
+    }
+
     void OnNextGame(){
         if(IsServer){
             Cleanup();
@@ -74,7 +86,9 @@ public abstract class GameMode : NetworkBehaviour
 
     virtual protected void Cleanup(){
         foreach(var player in spawnedPlayers){
-            player.Despawn(false);
+            if(player && player.IsSpawned){
+                player.Despawn(false);
+            }
         }
     }
 

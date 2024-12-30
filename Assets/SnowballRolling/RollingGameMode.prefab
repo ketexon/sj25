@@ -109,7 +109,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   duration: 10
   playerPrefab: {fileID: 6936269198397293443, guid: 824f1aecdaa9b7b40905205a144dc8d7, type: 3}
-  nextScene: 
+  nextScene: Hill
+  scoreMode: 1
   spawnSnow: {fileID: 4424883342466998408}
   spawnPointsContainer: {fileID: 113840626210459414}
 --- !u!1 &2652374511883820774

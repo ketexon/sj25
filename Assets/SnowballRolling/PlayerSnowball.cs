@@ -27,12 +27,14 @@ public class PlayerSnowball : NetworkBehaviour
         snowball.Scrap = GameManager.Instance.GetPlayerScrap((int)OwnerClientId);
         if(IsOwner){
             GameManager.Instance.SetRadiusServerRpc(snowball.Radius);
+            GameManager.Instance.SetMassServerRpc(snowball.Mass);
             snowball.SnowCollectedEvent.AddListener(OnSnowCollected);
         }
     }
 
     void OnSnowCollected(){
         GameManager.Instance.SetRadiusServerRpc(snowball.Radius);
+        GameManager.Instance.SetMassServerRpc(snowball.Mass);
     }
 
     void Update(){

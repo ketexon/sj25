@@ -28,6 +28,10 @@ public class GameManager : NetworkBehaviour {
 		0, 0, 0, 0
 	});
 
+	public NetworkList<float> PlayerMasses = new(new float[4] {
+		0, 0, 0, 0
+	});
+
 	NetworkVariable<int> nPlayersReady = new(
 		writePerm: NetworkVariableWritePermission.Server
 	);
@@ -46,15 +50,19 @@ public class GameManager : NetworkBehaviour {
         writePerm: NetworkVariableWritePermission.Server
     );
 
-	public NetworkList<int> PlayerScrapIndices => NetworkManager.Singleton.LocalClientId switch {
-		0 => Player1Scrap,
-		1 => Player2Scrap,
-		2 => Player3Scrap,
-		3 => Player4Scrap,
-		_ => null
-	};
+	public NetworkList<int> PlayerScrapIndices => GetPlayerScrapIndices((int)NetworkManager.Singleton.LocalClientId);
 
 	Coroutine countDownCoro = null;
+
+	public NetworkList<int> GetPlayerScrapIndices(int playerIndex){
+		return playerIndex switch {
+			0 => Player1Scrap,
+			1 => Player2Scrap,
+			2 => Player3Scrap,
+			3 => Player4Scrap,
+			_ => null
+		};
+	}
 
 	public List<Scrap> GetPlayerScrap(int playerIndex){
 		var networkList = playerIndex switch {
@@ -111,6 +119,12 @@ public class GameManager : NetworkBehaviour {
 	public void SetRadiusServerRpc(float radius, RpcParams rpcParams = default) {
 		var playerIndex = rpcParams.Receive.SenderClientId;
 		PlayerRadii[(int) playerIndex] = radius;
+	}
+
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	public void SetMassServerRpc(float mass, RpcParams rpcParams = default) {
+		var playerIndex = rpcParams.Receive.SenderClientId;
+		PlayerMasses[(int) playerIndex] = mass;
 	}
 
 	public void CollectScrap(Scrap scrap){
