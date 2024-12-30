@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00bb1b60d1e296d4da76beded07f9c95, type: 3}
   m_Name: Pencil
   m_EditorClassIdentifier: 
+  Name: 
   Prefab: {fileID: 2735940171469200550, guid: dcb6597fa50df8e44bb86519e09f818c, type: 3}
+  Length: 0.4
+  Mass: 0.1

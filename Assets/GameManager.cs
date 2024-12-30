@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Kutie.Extensions;
-using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -24,6 +23,11 @@ public class GameManager : NetworkBehaviour {
 	public NetworkList<int> Player2Scrap = new();
 	public NetworkList<int> Player3Scrap = new();
 	public NetworkList<int> Player4Scrap = new();
+
+	public NetworkList<float> PlayerRadii = new(new float[4] {
+		0, 0, 0, 0
+	});
+
 	NetworkVariable<int> nPlayersReady = new(
 		writePerm: NetworkVariableWritePermission.Server
 	);
@@ -103,6 +107,12 @@ public class GameManager : NetworkBehaviour {
 		Debug.Log($"Player {playerIndex} collected scrap {indexScrapMap[scrapIndex].Name}");
 	}
 
+	[Rpc(SendTo.Server, RequireOwnership = false)]
+	public void SetRadiusServerRpc(float radius, RpcParams rpcParams = default) {
+		var playerIndex = rpcParams.Receive.SenderClientId;
+		PlayerRadii[(int) playerIndex] = radius;
+	}
+
 	public void CollectScrap(Scrap scrap){
 		var scrapIndex = scrapIndexMap[scrap];
 		CollectScrapServerRpc(scrapIndex);
@@ -171,6 +181,7 @@ public class GameManager : NetworkBehaviour {
 		gameDuration = duration;
 
 		IEnumerator Coro(){
+			yield return new WaitForSeconds(3);
 			int i = 3;
 			while(i > 0){
 				Debug.Log($"COUNTDOWN: {i}");
