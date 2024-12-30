@@ -833,8 +833,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 1, z: 0.8329108}
+  m_Center: {x: 0, y: 0, z: -0.083544254}
 --- !u!23 &1514355205
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1004,6 +1004,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23517f298cadcdb4bb0cd140d9443ad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   agent: {fileID: 1951235826}
 --- !u!114 &1951235824
 MonoBehaviour:
